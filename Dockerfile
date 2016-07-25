@@ -6,10 +6,17 @@ RUN apt-get update && apt-get upgrade -y \
 	
 
 COPY scripts/ /docker-entrypoint-initdb.d/.
+# we need to touch and chown galera.cnf file, since we cant write as mysql user
+RUN touch /etc/mysql/conf.d/galera.cnf && chown mysql.mysql /etc/mysql/conf.d/galera.cnf
 
 
 ENV GALERA_USER="galera" \
 	GALERA_PASS="galerapass" \
 	MAXSCALE_USER="maxscale" \
-	MAXSCALE_PASS="maxscalepass"
+	MAXSCALE_PASS="maxscalepass" \ 
+	CLUSTER_NAME="docker_cluster" \
+	NEW_CLUSTER=0 \
+	MYSQL_ALLOW_EMPTY_PASSWORD=1
+	
+
 
