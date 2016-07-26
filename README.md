@@ -1,5 +1,6 @@
 # docker-mariadb-cluster
 Dockerized MariaDB Galera Cluster
+Designed for Docker __1.12__+
 
 # WORK in Progress!!
 
@@ -16,7 +17,7 @@ Dockerized MariaDB Galera Cluster
 		--env MYSQL_ALLOW_EMPTY_PASSWORD=0 \
 		--env MYSQL_ROOT_PASSWORD=rootpass \
 		--env DB_BOOTSTRAP_NAME=bootstrap \
-		maria --wsrep-new-cluster
+		toughiq/mariadb-cluster --wsrep-new-cluster
 
 ### Fire up Cluster Members
 
@@ -25,7 +26,7 @@ Dockerized MariaDB Galera Cluster
 		--replicas=3 \
 		--env DB_SERVICE_NAME=dbcluster \
 		--env DB_BOOTSTRAP_NAME=bootstrap \
-		maria
+		toughiq/mariadb-cluster
 
 ### Startup MaxScale Proxy
 
