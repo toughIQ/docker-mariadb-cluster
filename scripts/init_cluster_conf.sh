@@ -8,8 +8,8 @@ if [ -n "$DB_SERVICE_NAME" ]; then
   CLUSTER_MEMBERS=`getent hosts tasks.$DB_SERVICE_NAME|awk '{print $1}'|tr '\n' ','`
 fi
 
-if [ -n "$DB_MASTER_NAME" ]; then
-  CLUSTER_MEMBERS=$CLUSTER_MEMBERS`getent hosts tasks.$DB_MASTER_NAME|awk '{print $1}'`
+if [ -n "$DB_BOOTSTRAP_NAME" ]; then
+  CLUSTER_MEMBERS=$CLUSTER_MEMBERS$DB_BOOTSTRAP_NAME
 fi
 
 

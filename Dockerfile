@@ -10,12 +10,11 @@ COPY scripts/ /docker-entrypoint-initdb.d/.
 RUN touch /etc/mysql/conf.d/galera.cnf && chown mysql.mysql /etc/mysql/conf.d/galera.cnf
 
 
-ENV GALERA_USER="galera" \
-	GALERA_PASS="galerapass" \
-	MAXSCALE_USER="maxscale" \
-	MAXSCALE_PASS="maxscalepass" \ 
-	CLUSTER_NAME="docker_cluster" \
-	NEW_CLUSTER=0 \
+ENV GALERA_USER=galera \
+	GALERA_PASS=galerapass \
+	MAXSCALE_USER=maxscale \
+	MAXSCALE_PASS=maxscalepass \ 
+	CLUSTER_NAME=docker_cluster \
 	MYSQL_ALLOW_EMPTY_PASSWORD=1
 	
 
