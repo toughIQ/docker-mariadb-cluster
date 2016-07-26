@@ -1,10 +1,21 @@
 # docker-mariadb-cluster
 Dockerized MariaDB Galera Cluster
-Designed for Docker __1.12__+
+
+Build for use with Docker __1.12__+
 
 # WORK in Progress!!
 
-# Setup
+## Setup
+### Init Swarm Nodes/Cluster
+
+Swarm Master:
+		
+		docker swarm init
+		
+Additional Swarm Node(s):
+
+		docker swarm join <MasterNodeIP>:2377
+
 ### Create DB network
 
 		docker network create -d overlay mydbnet
