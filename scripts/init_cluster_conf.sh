@@ -9,7 +9,7 @@ if [ -n "$DB_SERVICE_NAME" ]; then
 fi
 
 if [ -n "$DB_BOOTSTRAP_NAME" ]; then
-  CLUSTER_MEMBERS=`getent hosts tasks.$DB_BOOTSTRAP_NAME|awk '{print $1}'`,$CLUSTER_MEMBERS
+  CLUSTER_MEMBERS=$CLUSTER_MEMBERS`getent hosts tasks.$DB_BOOTSTRAP_NAME|awk '{print $1}'`
 fi
 
 
@@ -33,7 +33,7 @@ wsrep-cluster-address = gcomm://$CLUSTER_MEMBERS?pc.wait_prim=no
 wsrep-provider = /usr/lib/galera/libgalera_smm.so 
 wsrep-provider-options = "gcache.size=256M;gcache.page_size=128M" 
 wsrep-sst-auth = "$GALERA_USER:$GALERA_PASS" 
-wsrep_sst_method = mysqldump
+wsrep_sst_method = rsync
 binlog-format = row 
 default-storage-engine = InnoDB 
 innodb-doublewrite = 1 
