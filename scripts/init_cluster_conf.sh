@@ -33,6 +33,7 @@ wsrep-cluster-address = gcomm://$CLUSTER_MEMBERS?pc.wait_prim=no
 wsrep-provider = /usr/lib/galera/libgalera_smm.so 
 wsrep-provider-options = "gcache.size=256M;gcache.page_size=128M" 
 wsrep-sst-auth = "$GALERA_USER:$GALERA_PASS" 
+wsrep_sst_method = mysqldump
 binlog-format = row 
 default-storage-engine = InnoDB 
 innodb-doublewrite = 1 
