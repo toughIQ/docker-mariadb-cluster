@@ -9,7 +9,7 @@ if [ -n "$DB_SERVICE_NAME" ]; then
 fi
 
 if [ -n "$DB_BOOTSTRAP_NAME" ]; then
-  CLUSTER_MEMBERS=$CLUSTER_MEMBERS$DB_BOOTSTRAP_NAME
+  CLUSTER_MEMBERS=$CLUSTER_MEMBERS`getent hosts tasks.$DB_BOOTSTRAP_NAME|awk '{print $1}'`
 fi
 
 
