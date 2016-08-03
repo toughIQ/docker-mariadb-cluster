@@ -53,7 +53,7 @@ Execute the following command. Just use autocompletion to get the `SLOT` and `ID
 
 	docker exec -it maxscale.<SLOT>.<ID> maxadmin -pmariadb list servers
 
-The result should report you cluster up and running:
+The result should report the cluster up and running:
 
 	-------------------+-----------------+-------+-------------+--------------------
 	Server             | Address         | Port  | Connections | Status              
