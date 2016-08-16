@@ -17,16 +17,17 @@ fi
 config_file="/etc/mysql/conf.d/galera.cnf"
 
 # we get the current container IP
-MYIP=`ip add show eth0 | grep inet | head -1 | awk '{print $2}' | cut -d"/" -f1`
+# was added for testing. disabled at the moment
+#MYIP=`ip add show eth0 | grep inet | head -1 | awk '{print $2}' | cut -d"/" -f1`
 # We start config file creation
 
 cat <<EOF > $config_file
 # Node specifics 
 [mysqld] 
-wsrep-node-name = "$HOSTNAME" 
-wsrep-node-address = $MYIP
-wsrep-sst-receive-address = $MYIP
-wsrep-node-incoming-address = $MYIP
+wsrep-node-name = $HOSTNAME 
+#wsrep-node-address = $MYIP
+wsrep-sst-receive-address = $HOSTNAME
+wsrep-node-incoming-address = $HOSTNAME
 
 # Cluster settings
 wsrep-on=ON
