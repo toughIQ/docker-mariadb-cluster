@@ -1,5 +1,8 @@
 # docker-mariadb-cluster
+__Version 1.0__
+Version 2 is the current branch and is featured as `:latest` on DockerHub.
 Dockerized MariaDB Galera Cluster
+
 
 Build for use with Docker __1.12.1__+
 
