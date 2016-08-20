@@ -28,9 +28,12 @@ config_file="/etc/mysql/conf.d/galera.cnf"
 cat <<EOF > $config_file
 # Node specifics 
 [mysqld] 
-wsrep-node-name = $HOSTNAME 
-wsrep-sst-receive-address = $HOSTNAME
-wsrep-node-incoming-address = $HOSTNAME
+# next 3 params disabled for the moment, since they are not mandatory and get changed with each new instance.
+# they also triggered problems when trying to persist data with a backup service, since also the config has to be 
+# persisted, but HOSTNAME changes at container startup.
+#wsrep-node-name = $HOSTNAME 
+#wsrep-sst-receive-address = $HOSTNAME
+#wsrep-node-incoming-address = $HOSTNAME
 
 # Cluster settings
 wsrep-on=ON
