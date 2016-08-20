@@ -1,12 +1,22 @@
 # docker-mariadb-cluster
-__Version 1.0__
-Version 2 is the current branch and is featured as `:latest` on DockerHub.
-Dockerized MariaDB Galera Cluster
+__Version 2__
+Dockerized Automated MariaDB Galera Cluster
 
+Version 2 is the advanced branch and is featured on DockerHub as `latest` from now on.
+Old version 1.0 can be found here: https://github.com/toughIQ/docker-mariadb-cluster/tree/v1.
+To get V1.0 Docker images, just `docker pull toughiq/mariadb-cluster:1.0`
 
-Build for use with Docker __1.12.1__+
+The idea of this project is to create an automated and fully ephemeral MariaDB Galera cluster.
+No static bindings, no persistent volumes. Like a disk RAID the data gets replicated across the cluster. 
+If one node fails, another node will be brought up and the data will be initialized.
 
-# WORK in Progress!!
+__Consider this a POC and not a production ready system!__ 
+
+Built for use with Docker __1.12.1__+ in __Swarm Mode__
+
+# WORK in Progress!
+
+See ISSUES for known problems.
 
 ## Setup
 ### Init Swarm Nodes/Cluster
@@ -17,32 +27,65 @@ Swarm Master:
 		
 Additional Swarm Node(s):
 
-	docker swarm join <MasterNodeIP>:2377
+	docker swarm join <MasterNodeIP>:2377 + join-tokens shown at swarm init
+
+To get the tokens at a later time, run `docker swarm join-token (manager|worker)`
 
 ### Create DB network
 
 	docker network create -d overlay mydbnet
 
-### Fire up Bootstrap node
-		
-	docker service create --name bootstrap \
-	--network mydbnet \
-	--replicas=1 \
-	--env MYSQL_ALLOW_EMPTY_PASSWORD=0 \
-	--env MYSQL_ROOT_PASSWORD=rootpass \
-	--env DB_BOOTSTRAP_NAME=bootstrap \
-	toughiq/mariadb-cluster:1.0 --wsrep-new-cluster
+### Init/Bootstrap DB Cluster 
 
-### Fire up Cluster Members
+At first we start with a new service, which is set to `--replicas=1` to turn this instance into a bootstrapping node.
+If there is just one service task running within the cluster, this instance automatically starts with `bootstrapping` enabled. 
 
 	docker service create --name dbcluster \
 	--network mydbnet \
-	--replicas=3 \
+	--replicas=1 \
 	--env DB_SERVICE_NAME=dbcluster \
-	--env DB_BOOTSTRAP_NAME=bootstrap \
-	toughiq/mariadb-cluster:1.0
+	toughiq/mariadb-cluster
 
-### Startup MaxScale Proxy
+Note: the service name provided by `--name` has to match the environment variable __DB_SERVICE_NAME__ set with `--env DB_SERVICE_NAME`.
+	
+Of course there are the default MariaDB options to define a root password, create a database, create a user and set a password for this user.
+Example:
+
+	docker service create --name dbcluster \
+	--network mydbnet \
+	--replicas=1 \
+	--env DB_SERVICE_NAME=dbcluster \
+	--env MYSQL_ROOT_PASSWORD=rootpass \
+	--env MYSQL_DATABASE=mydb \
+	--env MYSQL_USER=mydbuser \
+	--env MYSQL_PASSWORD=mydbpass \
+	toughiq/mariadb-cluster
+
+### Scale out additional cluster members
+Just after the first service instance/task is running with we are good to scale out.
+Check service with `docker service ps dbcluster`. The result should look like this, with __CURRENT STATE__ telling something like __Running__.
+
+	ID                         NAME         IMAGE                    NODE    DESIRED STATE  CURRENT STATE           ERROR
+	7c81muy053eoc28p5wrap2uzn  dbcluster.1  toughiq/mariadb-cluster  node01  Running        Running 41 seconds ago  
+
+Lets scale out now:
+
+	docker service scale dbcluster=3
+
+This additional 2 nodes start will come up in "cluster join"-mode. Lets check again: `docker service ps dbcluster`
+
+	ID                         NAME         IMAGE                    NODE    DESIRED STATE  CURRENT STATE               ERROR
+	7c81muy053eoc28p5wrap2uzn  dbcluster.1  toughiq/mariadb-cluster  node01  Running        Running 6 minutes ago       
+	8ht037ka0j4g6lnhc194pxqfn  dbcluster.2  toughiq/mariadb-cluster  node02  Running        Running about a minute ago  
+	bgk07betq9pwgkgpd3eoozu6u  dbcluster.3  toughiq/mariadb-cluster  node02  Running        Running about a minute ago 
+
+### Create MaxScale Proxy Service and connect to DBCluster
+
+There is no absolute need for a MaxScale Proxy service with this Docker Swarm enabled DB cluster, since Swarm provides a loadbalancer. So it would be possible to connect to the cluster by using the loadbalancer DNS name, which is in our case __dbcluster__. Its the same name, which is provided at startup by `--name`.
+
+But MaxScale provides some additional features regarding loadbalancing database traffic. And its an easy way to get information on the status of the cluster.
+
+Details on this MaxScale image can be found here: https://github.com/toughIQ/docker-maxscale
 
 	docker service create --name maxscale \
 	--network mydbnet \
@@ -50,6 +93,9 @@ Additional Swarm Node(s):
 	--env ENABLE_ROOT_USER=1 \
 	--publish 3306:3306 \
 	toughiq/maxscale
+	
+To disable root access to the database via MaxScale just set `--env ENABLE_ROOT_USER=0` or remove this line at all.
+Root access is disabled by default.
 
 ### Check successful startup of Cluster & MaxScale
 Execute the following command. Just use autocompletion to get the `SLOT` and `ID`.
@@ -61,12 +107,9 @@ The result should report the cluster up and running:
 	-------------------+-----------------+-------+-------------+--------------------
 	Server             | Address         | Port  | Connections | Status              
 	-------------------+-----------------+-------+-------------+--------------------
-	10.0.0.9           | 10.0.0.9        |  3306 |           0 | Slave, Synced, Running
-	10.0.0.8           | 10.0.0.8        |  3306 |           0 | Slave, Synced, Running
-	10.0.0.10          | 10.0.0.10       |  3306 |           0 | Master, Synced, Running
+	10.0.0.3           | 10.0.0.3        |  3306 |           0 | Slave, Synced, Running
+	10.0.0.4           | 10.0.0.4        |  3306 |           0 | Slave, Synced, Running
+	10.0.0.5           | 10.0.0.5        |  3306 |           0 | Master, Synced, Running
 	-------------------+-----------------+-------+-------------+--------------------
 
 
-### Remove Bootstrap Service
-
-	docker service rm bootstrap

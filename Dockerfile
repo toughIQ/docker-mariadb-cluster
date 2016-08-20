@@ -26,5 +26,5 @@ ENV GALERA_USER=galera \
     CLUSTER_NAME=docker_cluster \
     MYSQL_ALLOW_EMPTY_PASSWORD=1
     
-
+CMD ["mysqld"]
 
