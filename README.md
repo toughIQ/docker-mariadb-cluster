@@ -77,7 +77,7 @@ This additional 2 nodes start will come up in "cluster join"-mode. Lets check ag
 	ID                         NAME         IMAGE                    NODE    DESIRED STATE  CURRENT STATE               ERROR
 	7c81muy053eoc28p5wrap2uzn  dbcluster.1  toughiq/mariadb-cluster  node01  Running        Running 6 minutes ago       
 	8ht037ka0j4g6lnhc194pxqfn  dbcluster.2  toughiq/mariadb-cluster  node02  Running        Running about a minute ago  
-	bgk07betq9pwgkgpd3eoozu6u  dbcluster.3  toughiq/mariadb-cluster  node02  Running        Running about a minute ago 
+	bgk07betq9pwgkgpd3eoozu6u  dbcluster.3  toughiq/mariadb-cluster  node03  Running        Running about a minute ago 
 
 ### Create MaxScale Proxy Service and connect to DBCluster
 
