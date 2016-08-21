@@ -16,7 +16,7 @@ Built for use with Docker __1.12.1__+ in __Swarm Mode__
 
 # WORK in Progress!
 
-See ISSUES for known problems.
+See [Issues](https://github.com/toughIQ/docker-mariadb-cluster/issues) for known problems and [Wiki](https://github.com/toughIQ/docker-mariadb-cluster/wiki) for notes and ideas.
 
 ## Setup
 ### Init Swarm Nodes/Cluster
