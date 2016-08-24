@@ -8,14 +8,21 @@ CLUSTER_ADDRESS="gcomm://$CLUSTER_MEMBERS?pc.wait_prim=no"
 # we use dns service discovery to find other members when in service mode
 # and set/override cluster_members provided by ENV
 if [ -n "$DB_SERVICE_NAME" ]; then
+  # by default we assume Docker swarm with VIP networking. To enable DNSRR, like with Rancher, we add an
+  # additional switch, so we can handle the DNS query string. keyword "tasks."
+  if [ -n "$DNSRR" ]; then
+    DNS_QUERY="$DB_SERVICE_NAME"
+  else
+    DNS_QUERY="tasks.$DB_SERVICE_NAME"
+  fi
   
   # we check, if we have to enable bootstrapping, if we are the only/first node live
-  if [ `getent hosts tasks.$DB_SERVICE_NAME|wc -l` = 1 ] ;then 
+  if [ `getent hosts $DNS_QUERY|wc -l` = 1 ] ;then 
     # bootstrapping gets enabled by empty gcomm string
     CLUSTER_ADDRESS="gcomm://"
   else
     # we fetch IPs of service members
-    CLUSTER_MEMBERS=`getent hosts tasks.$DB_SERVICE_NAME|awk '{print $1}'|tr '\n' ','`
+    CLUSTER_MEMBERS=`getent hosts $DNS_QUERY|awk '{print $1}'|tr '\n' ','`
     # we set gcomm string with found service members
     CLUSTER_ADDRESS="gcomm://$CLUSTER_MEMBERS?pc.wait_prim=no"
   fi
