@@ -26,13 +26,15 @@ if [ -n "$DB_SERVICE_NAME" ]; then
     CLUSTER_MEMBERS=`getent hosts $DNS_QUERY|awk '{print $1}'|tr '\n' ','`
     # we set gcomm string with found service members
     CLUSTER_ADDRESS="gcomm://$CLUSTER_MEMBERS?pc.wait_prim=no"
+    
+    if [ -n "$MCAST" ]; then
+      CLUSTER_ADDRESS="gcomm://$MCAST?pc.wait_prim=no"
+      MCAST_OPTION=";gmcast.mcast_addr=$MCAST"
+    fi
   fi
 fi
 
-if [ -n "$MCAST" ]; then
-  CLUSTER_ADDRESS="gcomm://$MCAST?pc.wait_prim=no"
-  MCAST_OPTION=";gmcast.mcast_addr=$MCAST"
-fi
+
 
 # we create a galera config
 config_file="/etc/mysql/conf.d/galera.cnf"
