@@ -21,6 +21,9 @@ if [ -n "$DB_SERVICE_NAME" ]; then
   if [ `getent hosts $DNS_QUERY|wc -l` = 1 ] ;then 
     # bootstrapping gets enabled by empty gcomm string
     CLUSTER_ADDRESS="gcomm://"
+    if [ -n "$MCAST" ]; then
+      MCAST_OPTION=";gmcast.mcast_addr=$MCAST"
+    fi
   else
     # we fetch IPs of service members
     CLUSTER_MEMBERS=`getent hosts $DNS_QUERY|awk '{print $1}'|tr '\n' ','`
@@ -43,9 +46,9 @@ cat <<EOF > $config_file
 # Node specifics 
 [mysqld] 
 # enabled for rancher testing
-wsrep-node-name = $HOSTNAME 
-wsrep-sst-receive-address = $HOSTNAME
-wsrep-node-incoming-address = $HOSTNAME
+#wsrep-node-name = $HOSTNAME 
+#wsrep-sst-receive-address = $HOSTNAME
+#wsrep-node-incoming-address = $HOSTNAME
 
 # Cluster settings
 wsrep-on=ON
