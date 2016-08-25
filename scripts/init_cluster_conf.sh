@@ -29,6 +29,10 @@ if [ -n "$DB_SERVICE_NAME" ]; then
   fi
 fi
 
+if [ -n "$MCAST" ]; then
+  CLUSTER_ADDRESS="gcomm://$MCAST?pc.wait_prim=no"
+  MCAST_OPTION=";gmcast.mcast_addr=$MCAST"
+fi
 
 # we create a galera config
 config_file="/etc/mysql/conf.d/galera.cnf"
@@ -46,7 +50,7 @@ wsrep-on=ON
 wsrep-cluster-name = "$CLUSTER_NAME" 
 wsrep-cluster-address = $CLUSTER_ADDRESS
 wsrep-provider = /usr/lib/galera/libgalera_smm.so 
-wsrep-provider-options = "gcache.size=256M;gcache.page_size=128M;debug=yes" 
+wsrep-provider-options = "gcache.size=256M;gcache.page_size=128M;debug=yes$MCAST_OPTION" 
 wsrep-sst-auth = "$GALERA_USER:$GALERA_PASS" 
 wsrep_sst_method = rsync
 binlog-format = row 
