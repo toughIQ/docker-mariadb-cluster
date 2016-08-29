@@ -6,6 +6,17 @@ RUN apt-get update && apt-get upgrade -y \
     
 COPY scripts/ /docker-entrypoint-initdb.d/.
 
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN rm -rf docker-entrypoint.sh
+RUN ln -s usr/local/bin/docker-entrypoint.sh / # backwards compat
+
+# we have to change the default docker-entrypoint.sh script
+# to make sure galera.cnf gets written EVERY time to update cluster config
+# even if DB already exists and/or config is persisted on volume
+# We insert a seperate call at the end of the default file to run cluster init
+RUN sed -i -e 's/exec gosu.*$/exec \/docker-entrypoint-initdb.d\/init_cluster_conf.sh\n\texec gosu mysql \"\$BASH_SOURCE\" \"\$\@\"/g' docker-entrypoint.sh 
+
+
 # we need to touch and chown config files, since we cant write as mysql user
 RUN touch /etc/mysql/conf.d/galera.cnf \
     && chown mysql.mysql /etc/mysql/conf.d/galera.cnf \

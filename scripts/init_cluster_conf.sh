@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -e
-
+echo "XXXXXXXXXXXXXXXXXXX init XXXXXXXXXXXXXXXX"
 # we set gcomm string with cluster_members via ENV by default
 CLUSTER_ADDRESS="gcomm://$CLUSTER_MEMBERS?pc.wait_prim=no"
 
