@@ -1,6 +1,0 @@
-name: MariaDB-Cluster
-description: |
-  MariaDB Galera Cluster based on MariaDB 10.1.
-version: v2.0
-category: Databases
-maintainer: toughIQ <toughIQ@gmail.com>
