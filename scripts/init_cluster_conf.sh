@@ -46,9 +46,9 @@ cat <<EOF > $config_file
 # Node specifics 
 [mysqld] 
 # enabled for rancher testing
-#wsrep-node-name = $HOSTNAME 
-#wsrep-sst-receive-address = $HOSTNAME
-#wsrep-node-incoming-address = $HOSTNAME
+wsrep-node-name = $HOSTNAME.$RANCHER_STACK 
+wsrep-sst-receive-address = $HOSTNAME.$RANCHER_STACK
+wsrep-node-incoming-address = $HOSTNAME.$RANCHER_STACK
 
 # Cluster settings
 wsrep-on=ON
