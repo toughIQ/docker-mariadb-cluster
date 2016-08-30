@@ -1,0 +1,12 @@
+.catalog:
+  name: MariaDB-Cluster
+  version: v2.0 
+  description: "MariaDB-Cluster based on MariaDB 10.1"
+  minimum_rancher_version: v1.1.0
+  questions:
+    - variable: rancher_stack_name
+      label: "Rancher Stack Name"
+      description: "Must match the Rancher Stack Name of the Service to ensure proper DNS resolution in config."
+      default: "mariadb-cluster"
+      required: true
+      type: string 

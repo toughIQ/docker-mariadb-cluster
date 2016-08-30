@@ -2,41 +2,12 @@
 
 set -e
 
+# This version is especially designed for usage with RANCHER deployment
 # we set gcomm string with cluster_members via ENV by default
 CLUSTER_ADDRESS="gcomm://$CLUSTER_MEMBERS?pc.wait_prim=no"
 
-# we use dns service discovery to find other members when in service mode
-# and set/override cluster_members provided by ENV
-if [ -n "$DB_SERVICE_NAME" ]; then
-  # by default we assume Docker swarm with VIP networking. To enable DNSRR, like with Rancher, we add an
-  # additional switch, so we can handle the DNS query string. keyword "tasks."
-  DNSRR="on"    # set to default for use with rancher
-  if [ -n "$DNSRR" ]; then
-    DNS_QUERY="$DB_SERVICE_NAME"
-  else
-    DNS_QUERY="tasks.$DB_SERVICE_NAME"
-  fi
-  
-  # we check, if we have to enable bootstrapping, if we are the only/first node live
-  if [ `getent hosts $DNS_QUERY|wc -l` = 1 ] ;then 
-    # bootstrapping gets enabled by empty gcomm string
-    CLUSTER_ADDRESS="gcomm://"
-    if [ -n "$MCAST" ]; then
-      MCAST_OPTION=";gmcast.mcast_addr=$MCAST"
-    fi
-  else
-    # we fetch IPs of service members
-    CLUSTER_MEMBERS=`getent hosts $DNS_QUERY|awk '{print $1}'|tr '\n' ','`
-    # we set gcomm string with found service members
-    CLUSTER_ADDRESS="gcomm://$CLUSTER_MEMBERS?pc.wait_prim=no"
-    
-    if [ -n "$MCAST" ]; then
-      CLUSTER_ADDRESS="gcomm://$MCAST?pc.wait_prim=no"
-      MCAST_OPTION=";gmcast.mcast_addr=$MCAST"
-    fi
-  fi
-fi
-
+# RANCHER_STACK variable is needed to get correct hostname settings for replication
+RANCHER_STACK=""
 
 
 # we create a galera config
