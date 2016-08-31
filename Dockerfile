@@ -2,7 +2,7 @@ FROM mariadb:10.1
 MAINTAINER toughiq@gmail.com
 
 RUN apt-get update && apt-get upgrade -y \
-    && apt-get install -y curl \
+    && apt-get install -y curl galera-arbitrator-3 \
     && rm -rf /var/lib/apt/lists/*
     
 COPY scripts/ /docker-entrypoint-initdb.d/.
