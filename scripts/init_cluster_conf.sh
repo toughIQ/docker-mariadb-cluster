@@ -7,7 +7,7 @@ set -e
 CLUSTER_ADDRESS="gcomm://$CLUSTER_MEMBERS?pc.wait_prim=no"
 
 # RANCHER_STACK variable is needed to get correct hostname settings for replication
-RANCHER_STACK=""
+RANCHER_STACK=`curl http://rancher-metadata/latest/self/service/stack_name`
 
 
 # we create a galera config
