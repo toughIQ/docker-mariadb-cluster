@@ -24,7 +24,7 @@ ENV GALERA_USER=galera \
     GALERA_PASS=galerapass \
     MAXSCALE_USER=maxscale \
     MAXSCALE_PASS=maxscalepass \ 
-    CLUSTER_NAME=docker_cluster \
+    CLUSTER_NAME=rancher_cluster \
     MYSQL_ALLOW_EMPTY_PASSWORD=1
     
 CMD ["mysqld"]
