@@ -16,7 +16,7 @@ echo "BACKUP nach $BACKUP_DIR"
 echo "Current: full.sql"
 mysqldump --user=$BACKUP_USER --password=$BACKUP_PASS --host=$BACKUP_HOST --all-databases --add-drop-table --add-drop-database --routines  |gzip > $BACKUP_DIR/full_$DATE.sql.gz
 
-mysql -B -ss -e "show databases" | while read -r database
+mysql --user=$BACKUP_USER --password=$BACKUP_PASS --host=$BACKUP_HOST -B -ss -e "show databases" | while read -r database
 do
    #Skip not needed Databases
    if [ "$database" = "information_schema" ]; then
