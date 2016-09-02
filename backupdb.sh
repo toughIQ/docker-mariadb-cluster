@@ -29,7 +29,7 @@ do
         continue
    fi
    echo  "Current database: "$database
-   mysqldump --user=$BACKUP_USER --password=$BACKUP_PASS --host=$BACKUP_HOST --add-drop-table --add-drop-database --database $database --tables --routines | gzip > $BACKUP_DIR/$database.database_$DATE.sql.gz
+   mysqldump --user=$BACKUP_USER --password=$BACKUP_PASS --host=$BACKUP_HOST --add-drop-table --add-drop-database --databases $database --tables --routines | gzip > $BACKUP_DIR/$database.database_$DATE.sql.gz
 done
 
 
