@@ -4,11 +4,11 @@
 
 DATE=`date "+%y%m%d%H%M"`
 
-if [ -n BACKUP_DIR ]; then
+if [ -z "$BACKUP_DIR" ]; then
    BACKUP_DIR="/backup"
 fi
 
-if [ -n KEEP_DAYS ]; then
+if [ -z "$KEEP_DAYS" ]; then
    KEEP_DAYS=3
 fi
 
