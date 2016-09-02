@@ -23,7 +23,7 @@ wsrep-node-incoming-address = $MY_NAME.$RANCHER_STACK
 
 # Cluster settings
 wsrep-on=ON
-wsrep-cluster-name = "$CLUSTER_NAME" 
+wsrep-cluster-name = "$RANCHER_STACK" 
 wsrep-cluster-address = $CLUSTER_ADDRESS
 wsrep-provider = /usr/lib/galera/libgalera_smm.so 
 wsrep-provider-options = "gcache.size=256M;gcache.page_size=128M;debug=no" 
