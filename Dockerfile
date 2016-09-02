@@ -5,6 +5,7 @@ RUN apt-get update && apt-get upgrade -y \
     && apt-get install -y curl galera-arbitrator-3 \
     && rm -rf /var/lib/apt/lists/*
     
+COPY backupdb.sh /.
 COPY scripts/ /docker-entrypoint-initdb.d/.
 
 # we need to touch and chown config files, since we cant write as mysql user
