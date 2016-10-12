@@ -112,4 +112,5 @@ The result should report the cluster up and running:
 	10.0.0.5           | 10.0.0.5        |  3306 |           0 | Master, Synced, Running
 	-------------------+-----------------+-------+-------------+--------------------
 
-
+### Data persistance
+If you need data persistance; Mount a volume to /data in the container (using --mount).  A subfolder of /data will be created for each container (by ip) and the mysql datadir will be redirected here. Ensure /data is owned by 999:999.
