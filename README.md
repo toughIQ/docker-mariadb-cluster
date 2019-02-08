@@ -1,3 +1,6 @@
+[![Docker Pulls](https://img.shields.io/docker/pulls/toughiq/mariadb-cluster.svg)](https://hub.docker.com/r/toughiq/mariadb-cluster/)
+[![](https://images.microbadger.com/badges/image/toughiq/mariadb-cluster.svg)](https://microbadger.com/images/toughiq/mariadb-cluster "Get your own image badge on microbadger.com")
+
 # docker-mariadb-cluster
 __Version 2__
 Dockerized Automated MariaDB Galera Cluster
